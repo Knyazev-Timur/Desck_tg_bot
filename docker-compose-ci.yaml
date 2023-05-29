@@ -48,7 +48,7 @@ services:
 
 
   api:
-    image: charfull/cw_7:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     env_file: .env
     restart: always
     depends_on:
@@ -56,7 +56,6 @@ services:
         condition: service_healthy
 
   frontend:
-#    image: sermalenk/skypro-front:lesson-34
     image: sermalenk/skypro-front:lesson-35
     container_name: frontend
     restart: always
