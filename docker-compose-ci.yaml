@@ -23,41 +23,41 @@ services:
       timeout: 5s
       retries: 15
 
-#  api:
-##    build: .
-#    image: charfull/cw_7:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
-#    container_name: api
-#    command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
-#    env_file: .env
-#    environment:
-#      SQL_DB_HOST: pgdb
-#      SQL_DB_PORT: 5432
-#      SQL_DB_NAME: ${SQL_DB_NAME}
-#      SQL_DB_USER: ${SQL_DB_USER}
-#      SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
-#      SECRET_KEY: ${SECRET_KEY}
-#      DEBUG: ${DEBUG}
-#    restart: always
-#    depends_on:
-#      pgdb:
-#        condition: service_healthy
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - .:/app
-
-
   api:
+#    build: .
     image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: api
+    command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
     env_file: .env
+    environment:
+      SQL_DB_HOST: pgdb
+      SQL_DB_PORT: 5432
+      SQL_DB_NAME: ${SQL_DB_NAME}
+      SQL_DB_USER: ${SQL_DB_USER}
+      SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
     restart: always
     depends_on:
       pgdb:
         condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+
+
+#  api:
+#    image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+#    env_file: .env
+#    restart: always
+#    depends_on:
+#      pgdb:
+#        condition: service_healthy
 
   frontend:
 #    image: sermalenk/skypro-front:lesson-35
-    image: sermalenk/skypro-front:lesson-36
+    build: sermalenk/skypro-front:lesson-34
     container_name: frontend
     restart: always
     ports:
