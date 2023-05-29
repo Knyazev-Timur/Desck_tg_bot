@@ -85,7 +85,6 @@ class UpdatePasswordSerializer(serializers.Serializer):
         instance.save(update_fields=('password',))
         return instance
 
-    """ 26 min """
 
 
 
