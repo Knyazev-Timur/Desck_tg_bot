@@ -5,7 +5,7 @@ services:
     image: sermalenk/skypro-front:lesson-34
     container_name: frontend
     ports:
-      - "88:80"
+      - "80:80"
     restart: always
     depends_on:
       api:
