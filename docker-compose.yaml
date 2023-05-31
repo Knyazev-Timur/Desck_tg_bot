@@ -33,7 +33,7 @@ services:
       pgdb:
         condition: service_healthy
     ports:
-      - "80:80"
+      - "8000:8000"
     volumes:
       - .:/app
 

@@ -11,21 +11,15 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-
-import social_core.backends.vk
-# from environ import Env
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-
-# env = Env()
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# env.read_env(BASE_DIR.joinpath('.env'))
-
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -33,11 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', default=1)))
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,15 +37,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # ===== DRF ========
     'rest_framework',
-    'core',
+    # ===== CORS ======
+    'corsheaders',
+    # ===== Фильтры django-filter ====
+    'django_filters',
+    # === Авторизация через социальные сети ===
     'social_django',
+    # ==== Подключаем OpenAPI ====
+    'drf_yasg',
+    # ===== My Apps =====
+    'core.apps.CoreConfig',
+    # 'goals.apps.GoalsConfig',
+    # 'bot.apps.BotConfig',
+    # ====================
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,15 +65,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'todolist.urls'
 
-AUTH_USER_MODEL = 'core.USER'
+ROOT_URLCONF = 'todolist.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,6 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # Добавил эту строку
+                'social_django.context_processors.login_redirect',  # Добавил эту строку
             ],
         },
     },
@@ -86,28 +90,23 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('SQL_DB_NAME'),
-#         'USER': os.environ.get('SQL_DB_USER'),
-#         'PASSWORD': os.environ.get('SQL_DB_PASSWORD'),
-#         'HOST': os.environ.get('SQL_DB_HOST'),
-#         'PORT': os.environ.get('SQL_DB_PORT'),
-#     }
-# }
+# ==== ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ PostgreSQL ====
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('SQL_DB_NAME'),
+        'USER': os.environ.get('SQL_DB_USER'),
+        'PASSWORD': os.environ.get('SQL_DB_PASSWORD'),
+        'HOST': os.environ.get('SQL_DB_HOST'),
+        'PORT': os.environ.get('SQL_DB_PORT'),
+    }
+}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -126,11 +125,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
+# https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -138,34 +139,77 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
+STATIC_URL = "/django_static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "django_static")
+
+MEDIA_URL = "/django_media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "django_media")
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ==== Настройки CORS ====================
+CORS_ALLOW_ALL_ORIGINS = True
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.vk.VKOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://51.250.67.65',
+#     'https://51.250.67.65',
+#     'http://localhost:8000',
+# ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://51.250.67.31',
+    'https://51.250.67.31',
+    'http://localhost:8000',
+]
+
+SITE_ID = 1
+
+# LOGIN_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'core.User'
 
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
-SOCIAL_AUTH_VK_SCOPE = ['email']
-SOCIAL_AUTH_VK_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_VK_OAUTH2_KEY')
-SOCIAL_AUTH_VK_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_VK_OAUTH2_KEY')
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',  # бекенд авторизации через ВКонтакте
+]
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True  # After
+
+SOCIAL_AUTH_POSTGRES_ENABLED = True
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'photos', 'notify']
+
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/categories'
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+]
+SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_KEY")
+SOCIAL_AUTH_VK_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_SECRET")
 
-SOCIAL_AUTH_LOGIN_ERROR_URL ='/login-error'
-SOCIAL_AUTH_USER_MODEL = 'core.User'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
+SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
 
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-
-
-
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', ],
+}

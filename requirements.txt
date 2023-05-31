@@ -15,3 +15,10 @@ social-auth-core==4.4.2
 requests==2.31.0
 marshmallow==3.14.1
 marshmallow-dataclass==8.5.3
+
+
+
+
+drf-nested-routers==0.93.4
+drf-yasg==1.21.5
+pyTelegramBotAPI==4.12.0
