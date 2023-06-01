@@ -35,7 +35,7 @@ services:
       SQL_DB_NAME: ${SQL_DB_NAME}
       SQL_DB_USER: ${SQL_DB_USER}
       SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
-#      SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
       DEBUG: ${DEBUG}
     restart: always
     depends_on:
@@ -65,7 +65,6 @@ services:
     depends_on:
       api:
         condition: service_started
-
 
 
 
