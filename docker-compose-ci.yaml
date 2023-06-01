@@ -61,10 +61,11 @@ services:
     container_name: frontend
     restart: always
     ports:
-      - "80:80"
+      - "88:80"
     depends_on:
       api:
         condition: service_started
+
 
 
 
