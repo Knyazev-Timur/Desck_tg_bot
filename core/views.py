@@ -1,5 +1,5 @@
-from django.contrib.auth import login, logout
-from rest_framework import permissions
+from django.contrib.auth import login, logout, get_user_model
+from rest_framework import permissions, generics
 from rest_framework.generics import (
     CreateAPIView,
     GenericAPIView,
@@ -13,9 +13,11 @@ from core.serializers import (
     CreateUserSerializer,
     LoginSerializer,
     UserSerializer,
-    UpdatePasswordSerializer,
+    UpdatePasswordSerializer, RegistrationSerializer,
 )
 
+
+USER_MODEL = get_user_model()
 
 class SignupView(CreateAPIView):
     """ Вход для пользователя """
@@ -31,6 +33,10 @@ class SignupView(CreateAPIView):
             backend="django.contrib.auth.backends.ModelBackend",
         )
 
+class RegistrationView(generics.CreateAPIView):
+    model = USER_MODEL
+    permissions_classes = [permissions.AllowAny]
+    serializer_class = RegistrationSerializer
 
 class LoginView(GenericAPIView):
     """ Авторизация пользователя """

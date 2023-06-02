@@ -43,7 +43,7 @@ services:
       context: .
     container_name: migrations
     environment:
-      SQL_DB_HOST: pgdb
+      SQL_DB_HOST: ${SQL_DB_HOST}
       SQL_DB_PORT: 5432
       SQL_DB_NAME: ${SQL_DB_NAME}
       SQL_DB_USER: ${SQL_DB_USER}
