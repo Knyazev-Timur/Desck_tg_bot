@@ -25,12 +25,12 @@ services:
 
   api:
 #    build: .
-    image: charfull/cw_7:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: api
     command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
     env_file: .env
     environment:
-      SQL_DB_HOST: ${SQL_DB_NAME}
+      SQL_DB_HOST: pgdb
       SQL_DB_PORT: 5432
       SQL_DB_NAME: ${SQL_DB_NAME}
       SQL_DB_USER: ${SQL_DB_USER}
