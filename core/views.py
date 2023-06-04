@@ -46,26 +46,24 @@ class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
-        s: LoginSerializer = self.get_serializer(data=request.data)
-        s.is_valid(raise_exception=True)
-        user = s.validated_data["user"]
-        login(request, user=user)
-        user_serializer = UserSerializer(instance=user)
-        return Response(user_serializer.data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        login(request=request, user=user)
+        return Response(serializer.data)
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
-    """ Профиль пользователя """
-    model = User
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
+    queryset = USER_MODEL.objects.all()
+    pagination_class = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
 
     def delete(self, request, *args, **kwargs):
         logout(request)
-        return Response({})
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UpdatePasswordView(generics.UpdateAPIView):
