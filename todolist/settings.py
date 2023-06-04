@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'core',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'todolist.urls'
 
-AUTH_USER_MODEL = 'core.USER'
+# AUTH_USER_MODEL = 'core.USER'
 
 TEMPLATES = [
     {
