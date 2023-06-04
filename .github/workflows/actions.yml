@@ -32,7 +32,7 @@ jobs:
       SQL_DB_USER: ${{secrets.SQL_DB_USER}}
       SQL_DB_PASSWORD: ${{secrets.SQL_DB_PASSWORD}}
       SECRET_KEY: ${{secrets.SECRET_KEY}}
-      DEBUG: ${{secrets.DEBUG}}
+      DEBUG: False
     steps:
       - name: Clone Code
         uses: actions/checkout@v3.5.2

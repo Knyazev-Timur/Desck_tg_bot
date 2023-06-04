@@ -36,7 +36,7 @@ services:
       SQL_DB_USER: ${SQL_DB_USER}
       SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
-      DEBUG: ${DEBUG}
+      DEBUG: False
     restart: always
     depends_on:
       pgdb:
