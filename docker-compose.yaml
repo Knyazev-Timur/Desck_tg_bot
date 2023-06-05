@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   frontend:
-    image: sermalenk/skypro-front:lesson-35
+    image: sermalenk/skypro-front:lesson-36
     container_name: frontend
     ports:
       - "80:80"
@@ -26,8 +26,8 @@ services:
       SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
       DEBUG: ${DEBUG}
-      SOCIAL_AUTH_VK_OAUTH2_KEY: '5166592'
-      SOCIAL_AUTH_VK_OAUTH2_SECRET: 'kEHoPz5KFBpdHFpUmkpG'
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
     restart: always
     depends_on:
       pgdb:
