@@ -1,4 +1,4 @@
-# clean 35 new 80
+# clean 35 new 80 84.201.132.41
 
 name: Build and deploy workflow
 on:
@@ -75,5 +75,4 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            docker system prune -a -f
-            
+            docker system prune -a -f           
