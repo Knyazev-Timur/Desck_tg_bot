@@ -159,17 +159,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTHENTICATION_BACKENDS = (
-#     'social_core.backends.vk.VKOAuth2',
-#     'django.contrib.auth.backends.ModelBackend',
-# )
-
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
     'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
 )
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
 
 
 SOCIAL_AUTH_POSTGRES_ENABLED = True
