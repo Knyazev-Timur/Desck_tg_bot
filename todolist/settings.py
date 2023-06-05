@@ -84,28 +84,28 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('SQL_DB_NAME'),
-#         'USER': os.environ.get('SQL_DB_USER'),
-#         'PASSWORD': os.environ.get('SQL_DB_PASSWORD'),
-#         'HOST': os.environ.get('SQL_DB_HOST'),
-#         'PORT': os.environ.get('SQL_DB_PORT'),
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'pgdb',
-        'PORT': '5432',
+        'NAME': os.environ.get('SQL_DB_NAME'),
+        'USER': os.environ.get('SQL_DB_USER'),
+        'PASSWORD': os.environ.get('SQL_DB_PASSWORD'),
+        'HOST': os.environ.get('SQL_DB_HOST'),
+        'PORT': os.environ.get('SQL_DB_PORT'),
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'pgdb',
+#         'PORT': '5432',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
