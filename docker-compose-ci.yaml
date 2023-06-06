@@ -36,9 +36,9 @@ services:
       SQL_DB_USER: ${SQL_DB_USER}
       SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
-      DEBUG: False
       SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
       SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+      DEBUG: False
     restart: always
     depends_on:
       pgdb:

@@ -52,6 +52,8 @@ jobs:
           host: ${{ secrets.HOST}}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
+          SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
           source: "deploy_ci/docker-compose.yaml, deploy_ci/.env"
           target: "deploy_ci"
           strip_components: 1
@@ -63,6 +65,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
+          SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
           script: |-
             whoami
             cd deploy_ci
