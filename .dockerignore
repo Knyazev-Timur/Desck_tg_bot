@@ -1,4 +1,4 @@
-!**
+**
 !core/**
 !core
 !core/migrations/
@@ -6,7 +6,7 @@
 !goals/**
 !bot
 !bot/**
-!todolist
+!todolist/**
 !manage.py
 !requirements.txt
 !Dockerfile
