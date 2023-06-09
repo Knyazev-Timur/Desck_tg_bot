@@ -6,6 +6,14 @@ from rest_framework.exceptions import ValidationError, AuthenticationFailed, Not
 
 USER_MODEL = get_user_model()
 
+#
+# class ProfileSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = USER_MODEL
+#         fields = ('id', 'username', 'first_name', 'last_name', 'email')
+#
+
 class PassswordField(serializers.CharField):
 
     def __init__(self, **kwargs):
