@@ -16,7 +16,7 @@ class GoalListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalWithUserSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-    filter_class = GoalFilter
+    filterset_class = GoalFilter
     ordering_fields = ['title', 'created']
     ordering = ['title']
     search_fields = ['title', 'description']
