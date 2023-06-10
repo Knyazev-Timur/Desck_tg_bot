@@ -56,6 +56,11 @@ services:
 #    volumes:
 #      - .:/app
 
+#      - ./core:/apt/core
+#      - ./todolist:/apt/todolist
+#      - ./goals:/apt/goals
+#      - django_static:/apt/static
+
   frontend:
     image: sermalenk/skypro-front:lesson-36
     container_name: frontend
