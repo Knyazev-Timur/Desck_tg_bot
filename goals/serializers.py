@@ -35,7 +35,6 @@ class GoalSerializer(serializers.ModelSerializer):
             raise PermissionDenied
         return value
 
-    # Проверка дедлайна
 
 class GoalWithUserSerializer(GoalSerializer):
     user = UserSerializer(read_only=True)
