@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'social_django',
     'django_filters',
     'rest_framework',
+    'bot',
     'core',
     'goals',
 ]
@@ -228,3 +229,5 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
 # }
+
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
