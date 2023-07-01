@@ -61,7 +61,7 @@ services:
 #      - ./goals:/apt/goals
 #      - django_static:/apt/static
 
- bot:
+  bot:
     image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: bot
 
@@ -78,10 +78,10 @@ services:
         condition: service_healthy
     command: python3 manage.py runbot
 
-      - ./core:/apt/core
-      - ./todolist:/apt/todolist
-      - ./goals:/apt/goals
-      - django_static:/apt/static
+#      - ./core:/apt/core
+#      - ./todolist:/apt/todolist
+#      - ./goals:/apt/goals
+#      - django_static:/apt/static
 
   frontend:
     image: sermalenk/skypro-front:lesson-38
