@@ -78,11 +78,6 @@ services:
         condition: service_healthy
     command: python3 manage.py runbot
 
-#      - ./core:/apt/core
-#      - ./todolist:/apt/todolist
-#      - ./goals:/apt/goals
-#      - django_static:/apt/static
-
   frontend:
     image: sermalenk/skypro-front:lesson-38
     container_name: frontend
