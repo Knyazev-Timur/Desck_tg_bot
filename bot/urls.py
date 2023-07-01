@@ -1,8 +1,7 @@
 from django.urls import path
 
-from .views import VerificationView
-
+from . import views
 
 urlpatterns = [
-    path("verify", VerificationView.as_view(), name='verify'),
+    path("verify", views.VerificationView.as_view(), name='verify'),
 ]
