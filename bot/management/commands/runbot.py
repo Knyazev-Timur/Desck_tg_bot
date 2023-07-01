@@ -28,13 +28,33 @@ class Command(BaseCommand):
         if tg_user.is_verified:
             self.handle_authorized_user(tg_user, msg)
         else:
-            self.handle_unauthorized_user(tg_user, msg)
+            chat_id = tg_user.chat_id
+            self.tg_client.send_message(msg.chat.id, 'Введите код авторизации:')
+            tg_user.update_verification_code()
+            self.tg_client.send_message(chat_id, tg_user.verification_code)
+            # self.handle_unauthorized_user(tg_user, msg)
 
     def handle_authorized_user(self, tg_user: TgUser, msg: Message):
-        self.tg_client.send_message(msg.chat.id, f'Приветствую в чате ID:{msg.chat.id}')
 
-    def handle_unauthorized_user(self, tg_user: TgUser, msg: Message):
-        chat_id = tg_user.chat_id
-        self.tg_client.send_message(msg.chat.id, 'Введите код авторизации:')
-        tg_user.update_verification_code()
-        self.tg_client.send_message(chat_id, tg_user.verification_code)
+
+        if msg.text.startswith('/'):
+            if msg.text == '/goals':
+                self.tg_client.send_message(msg.chat.id, f'Вы выбрали ЦЕЛИ')
+
+            elif msg.text == '/create':
+                self.tg_client.send_message(msg.chat.id, f'Вы выбрали СОЗДАТЬ')
+
+            else:
+                self.tg_client.send_message(tg_user.chat_id, 'Command not found')
+
+        else:
+            self.tg_client.send_message(msg.chat.id, f'Приветствую в чате ID:{msg.chat.id}\n'
+                                                     f'Доступные команды:\n'
+                                                     f'/goals\n/create')
+
+
+    # def handle_unauthorized_user(self, tg_user: TgUser, msg: Message):
+    #     chat_id = tg_user.chat_id
+    #     self.tg_client.send_message(msg.chat.id, 'Введите код авторизации:')
+    #     tg_user.update_verification_code()
+    #     self.tg_client.send_message(chat_id, tg_user.verification_code)

@@ -33,6 +33,8 @@ services:
 #        condition: service_healthy
 
   api:
+    build: .
+
     image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: api
     command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
@@ -62,6 +64,7 @@ services:
 #      - django_static:/apt/static
 
   bot:
+    build: .
     image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: bot
 

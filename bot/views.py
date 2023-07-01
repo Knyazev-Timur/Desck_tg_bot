@@ -4,8 +4,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bot.models import TgUser
+from bot.serializers import TgUserSerializer
 from bot.tg.client import TgClient
-from bot.tg.serializers import TgUserSerializer
+
 
 
 class VerificationView(generics.GenericAPIView):
