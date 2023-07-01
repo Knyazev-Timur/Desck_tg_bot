@@ -61,6 +61,28 @@ services:
 #      - ./goals:/apt/goals
 #      - django_static:/apt/static
 
+ bot:
+    image: charfull/cw_docker:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: bot
+
+    environment:
+      SQL_DB_HOST: pgdb
+      SQL_DB_PORT: 5432
+      SQL_DB_NAME: ${SQL_DB_NAME}
+      SQL_DB_USER: ${SQL_DB_USER}
+      SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
+      BOT_TOKEN: ${BOT_TOKEN}
+    restart: always
+    depends_on:
+      pgdb:
+        condition: service_healthy
+    command: python3 manage.py runbot
+
+      - ./core:/apt/core
+      - ./todolist:/apt/todolist
+      - ./goals:/apt/goals
+      - django_static:/apt/static
+
   frontend:
     image: sermalenk/skypro-front:lesson-38
     container_name: frontend
@@ -70,6 +92,8 @@ services:
     depends_on:
       api:
         condition: service_started
+
+
 
 
 

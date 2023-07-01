@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.crypto import get_random_string
 
 USER = get_user_model()
 
@@ -11,5 +12,17 @@ class TgUser(models.Model):
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.chat_id}'
+
+    def update_verification_code(self) -> None:
+        self.verification_code = self._generate_verificztion_code()
+        self.save(update_fields=['verification_code'])
+
+    @property
+    def is_verified(self) -> bool:
+        return bool(self.user)
+
+    @staticmethod
+    def _generate_verificztion_code() ->str:
+        return get_random_string(20)
 
 
