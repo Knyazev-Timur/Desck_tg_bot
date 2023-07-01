@@ -1,28 +1,33 @@
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.utils.crypto import get_random_string
+import random
+import string
 
-USER = get_user_model()
+from django.db import models
+
+from core.models import User
+
+CODE_VOCABULARY = string.ascii_letters + string.digits
 
 
 class TgUser(models.Model):
-    chat_id = models.BigIntegerField(primary_key=True, editable=False, unique=True)
-    user = models.OneToOneField(USER, on_delete=models.CASCADE, null=True, blank=True)
-    verification_code = models.CharField(max_length=20, null=True, blank=True)
+    """ Минимальные поля в модели:
+        - telegram chat_id
+        - telegram user_ud
+        - внутренний user_id пользователя (nullable поле)
+    """
+    chat_id = models.BigIntegerField(verbose_name='Чат ID')
+    user_ud = models.BigIntegerField(verbose_name="user ud", unique=True)
+    username = models.CharField(max_length=512, verbose_name="tg username", null=True, blank=True, default=None)
+    user = models.ForeignKey(User, models.PROTECT, null=True, blank=True, default=None,
+                             verbose_name='Связанный пользователь')
+    verification_code = models.CharField(max_length=32, verbose_name="Код подтверждения")
+
+    def set_verification_code(self):
+        code = "".join([random.choice(CODE_VOCABULARY) for _ in range(12)])
+        self.verification_code = code
 
     def __str__(self):
-        return f'{self.__class__.__name__} {self.chat_id}'
+        return '{}'.format(self.user)
 
-    def update_verification_code(self) -> None:
-        self.verification_code = self._generate_verificztion_code()
-        self.save(update_fields=['verification_code'])
-
-    @property
-    def is_verified(self) -> bool:
-        return bool(self.user)
-
-    @staticmethod
-    def _generate_verificztion_code() ->str:
-        return get_random_string(20)
-
-
+    class Meta:
+        verbose_name = "Телеграм Пользователь"
+        verbose_name_plural = "Телеграм Пользователи"
