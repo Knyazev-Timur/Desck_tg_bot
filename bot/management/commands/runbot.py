@@ -53,7 +53,7 @@ class Command(BaseCommand):
     #
     def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
         """ Проверочный код. Обрабатывать пользователя без проверки """
-        self.tg_client.send_message(msg.chat.id, 'Введите код верификации\n',)
+        self.tg_client.send_message(msg.chat.id, 'Введите код верификации\n')
         tg_user.set_verification_code()
         tg_user.save(update_fields=["verification_code"])
         self.tg_client.send_message(msg.chat.id, f"Verification code: {tg_user.verification_code}")
