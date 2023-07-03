@@ -1,4 +1,4 @@
-# for tg bot new host share board tg bot destroy new secrets ssh
+# for tg bot new host share board destroy
 
 name: Build and deploy workflow
 on:
