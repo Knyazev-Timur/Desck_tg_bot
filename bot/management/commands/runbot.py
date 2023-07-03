@@ -53,15 +53,10 @@ class Command(BaseCommand):
     #
     def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
         """ Проверочный код. Обрабатывать пользователя без проверки """
-        self.tg_client.send_message(
-            msg.chat.id,
-            'Добро пожаловать в бот @ToDo_List_SkyPro_cw7_bot\n'
-            'Для продолжения работы необходимо привязать\n'
-            'Ваш аккаунт на сайте http://51.250.67.65/\n',
-        )
+        self.tg_client.send_message(msg.chat.id, 'Введите код верификации\n',)
         tg_user.set_verification_code()
         tg_user.save(update_fields=["verification_code"])
-        self.tg_client.send_message(msg.chat.id, f"Верификационный  код: {tg_user.verification_code}")
+        self.tg_client.send_message(msg.chat.id, f"Verification code: {tg_user.verification_code}")
 
     def handle_verified_user(self, msg: Message, tg_user: TgUser):
         """ Для работы с верифицированным пользователем.
@@ -69,7 +64,7 @@ class Command(BaseCommand):
         :param: /goals -> выводит список целей
         :param: /create -> позволяет создавать новые цели
         :param: /cancel -> позволяет отменить создание цели (только на этапе создания)
-        :param: /goal_category -> выводит список категорий
+        :param: /category -> выводит список категорий
         :param: /board -> выводит список досок задач
         :param: /choose -> позволяет сделать выбор категории
         """
@@ -81,7 +76,7 @@ class Command(BaseCommand):
             return
         if "/board" in msg.text:
             self.fetch_board(msg, tg_user)
-        elif '/goal_category' in msg.text:
+        elif '/category' in msg.text:
             self.fetch_category(msg, tg_user)
         elif '/goals' in msg.text:
             self.fetch_tasks(msg, tg_user)
@@ -91,7 +86,7 @@ class Command(BaseCommand):
             self.get_cancel(msg, tg_user)
 
         elif ('user' not in user_states['state']) and (msg.text not in allowed_commands):
-            self.tg_client.send_message(tg_user.chat_id, 'Неизвестная команда')
+            self.tg_client.send_message(tg_user.chat_id, 'Unknown command')
 
         elif (msg.text not in allowed_commands) and (user_states['state']['user']) and ('category' not in user_states['state']):
             category = self.handle_save_category(msg, tg_user)
