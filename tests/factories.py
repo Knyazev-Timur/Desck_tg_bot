@@ -2,7 +2,7 @@ import factory.django
 import factory
 from django.utils import timezone
 
-
+from bot.models import TgUser
 from core.models import User
 from pytest_factoryboy import register
 
@@ -90,3 +90,14 @@ class CreateGoalRequest(factory.DictFactory):
 
 class CreateGoalCommentRequest(factory.DictFactory):
     text =factory.Faker('sentence')
+
+@register
+class TuserFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    chat_id = factory.Faker('pyint')
+    user_ud = chat_id
+    username = user,
+    verification_code = 'correct'
+
+    class Meta:
+        model = TgUser
