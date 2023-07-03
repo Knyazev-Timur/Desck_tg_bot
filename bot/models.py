@@ -9,11 +9,7 @@ CODE_VOCABULARY = string.ascii_letters + string.digits
 
 
 class TgUser(models.Model):
-    """ Минимальные поля в модели:
-        - telegram chat_id
-        - telegram user_ud
-        - внутренний user_id пользователя (nullable поле)
-    """
+    """ Модель пользователья ТГ-бота """
     chat_id = models.BigIntegerField(verbose_name='Чат ID')
     user_ud = models.BigIntegerField(verbose_name="user ud", unique=True)
     username = models.CharField(max_length=512, verbose_name="tg username", null=True, blank=True, default=None)
@@ -29,5 +25,5 @@ class TgUser(models.Model):
         return '{}'.format(self.user)
 
     class Meta:
-        verbose_name = "Телеграм Пользователь"
-        verbose_name_plural = "Телеграм Пользователи"
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"

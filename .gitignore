@@ -164,3 +164,4 @@ cython_debug/
 /bot_do_s/management/commands/
 /bot_do_s/migrations/
 /bot_do_s/tg/
+/todolist/mds.py

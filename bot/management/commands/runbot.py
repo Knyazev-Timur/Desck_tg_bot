@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from bot.models import TgUser
 from bot.tg.client import TgClient
 from bot.tg.dc import Message
-from goals.models import Goal, GoalCategory, BoardParticipant, Board
+from goals.models import Goal, GoalCategory, BoardParticipant
 
 # =============== Enable logging  ==============================
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -34,16 +34,19 @@ class Command(BaseCommand):
 
     def handle_message(self, msg: Message):
         # logger.info(f'{msg}')
-        tg_user, created = TgUser.objects.get_or_create(user_ud=msg.from_.id, defaults={"chat_id": msg.chat.id, "username": msg.from_.username})
+        tg_user, created = TgUser.objects.get_or_create(
+            user_ud=msg.from_.id,
+            defaults={"chat_id": msg.chat.id, "username": msg.from_.username}
+        )
+
         if "/start" in msg.text:
             self.tg_client.send_message(
                 msg.chat.id, "Приветствую!\n"
-                             'BOT Принимает и обрабатывает следующие команды:\n'
+                             'Доступные команды:\n'
                              '/board -> выводит список досок задач\n'
-                             '/goal_category -> выводит список категорий\n'
+                             '/category -> выводит список категорий\n'
                              '/goals -> выводит список целей\n'
-                             '/create -> позволяет создавать новые цели\n'
-                             '/cancel -> позволяет отменить создание цели (только на этапе создания)\n')
+            )
 
         if tg_user.user:
             self.handle_verified_user(msg, tg_user)
@@ -88,16 +91,30 @@ class Command(BaseCommand):
         elif ('user' not in user_states['state']) and (msg.text not in allowed_commands):
             self.tg_client.send_message(tg_user.chat_id, 'Unknown command')
 
-        elif (msg.text not in allowed_commands) and (user_states['state']['user']) and ('category' not in user_states['state']):
+        elif (msg.text not in allowed_commands) and (
+                user_states['state']['user']
+        ) and (
+                'category' not in user_states['state']
+        ):
             category = self.handle_save_category(msg, tg_user)
             if category:
                 user_states['state']['category'] = category
-                self.tg_client.send_message(tg_user.chat_id, f'Выбрана категория:\n {category}.\nВведите заголовок цели.')
+                self.tg_client.send_message(
+                    tg_user.chat_id, f'Выбрана категория:\n {category}.\nВведите заголовок цели.'
+                )
 
-        elif (msg.text not in allowed_commands) and (user_states['state']['user']) and (user_states['state']['category']) and ('goal_title' not in user_states['state']):
+        elif (msg.text not in allowed_commands) and (
+                user_states['state']['user']
+        ) and (user_states['state']['category']) and (
+                'goal_title' not in user_states['state']
+        ):
             user_states['state']['goal_title'] = msg.text
             logger.info(user_states)
-            goal = Goal.objects.create(title=user_states['state']['goal_title'], user=user_states['state']['user'], category=user_states['state']['category'],)
+            goal = Goal.objects.create(
+                title=user_states['state']['goal_title'],
+                user=user_states['state']['user'],
+                category=user_states['state']['category'],
+            )
             self.tg_client.send_message(tg_user.chat_id, f'Цель: {goal} создана в БД')
             del user_states['state']['user']
             del user_states['state']['msg_chat_id']
@@ -106,32 +123,32 @@ class Command(BaseCommand):
             cat_id.clear()
 
     def fetch_board(self, msg: Message, tg_user: TgUser):
-        """ Получаем список участников Board. Если участника нет Board, то отправим ему сообщение"""
+        """ Список Досок участника"""
         boards = BoardParticipant.objects.filter(user=tg_user.user)
-        # logger.info(boards)
+
         if boards:
-            [self.tg_client.send_message(msg.chat.id, f"Название карточек: {item.board}\n") for item in boards]
+            [self.tg_client.send_message(msg.chat.id, f"Ваши доски: {item.board}\n") for item in boards]
         else:
-            self.tg_client.send_message(msg.chat.id, "Нет у вас Board")
+            self.tg_client.send_message(msg.chat.id, "Доски отсутствуют.")
 
     def fetch_category(self, msg: Message, tg_user: TgUser):
         """
-        Получение всех категорий пользователя в Telegram.
-        Если категорий у пользователя нет, то отправить сообщение, что категорий нет.
+        Вывод категорий пользователя в ТГ-бот.
         """
         resp_categories: list[str] = [
             f'{category.id} {category.title}'
             for category in GoalCategory.objects.filter(
                 board__participants__user=tg_user.user_id, is_deleted=False)]
         if resp_categories:
-            self.tg_client.send_message(msg.chat.id, "🏷 Ваши категории\n===================\n" + '\n'.join(resp_categories))
+            self.tg_client.send_message(
+                msg.chat.id, "Ваши категории\n===================\n" + '\n'.join(resp_categories)
+            )
         else:
-            self.tg_client.send_message(msg.chat.id, 'У Вас нет ни одной категории!')
+            self.tg_client.send_message(msg.chat.id, 'У Вас нет созданных категории!')
 
     def handle_categories(self, msg: Message, tg_user: TgUser):
         """
-         Перед выбором категории для сохранения цели просит выбрать
-        ID категории куда будет сохранена задача
+         Выбор ID категории для сохранения цели
         """
         categories = GoalCategory.objects.filter(user=tg_user.user)
         if categories.count() > 0:
@@ -141,20 +158,19 @@ class Command(BaseCommand):
                 cat_id.append(cat.id)
             self.tg_client.send_message(
                 chat_id=tg_user.chat_id,
-                text=f'Выберите номер категории для новой цели:\n========================\n{cat_text}'
-                     f'Или нажмите /cancel для отмены'
+                text=f'Выберите номер категории:\n{cat_text}'
+                     f'Для отмены введите: /cancel'
             )
             if 'user' not in user_states['state']:
                 user_states['state']['user'] = tg_user.user
                 user_states['state']['msg_chat_id'] = tg_user.chat_id
                 logger.info(user_states)
         else:
-            self.tg_client.send_message(msg.chat.id, 'список категорий пуст')
+            self.tg_client.send_message(msg.chat.id, 'Category not found!')
 
     def fetch_tasks(self, msg: Message, tg_user: TgUser):
         """
-        Получение всех целей пользователя в Telegram.
-        Если целей у пользователя нет, то отправить сообщение, что целей нет.
+        Получение целей из БД и отправка на вывод в ТГ-бот
         """
         goals = Goal.objects.filter(user=tg_user.user)
         if goals.count() > 0:
@@ -165,7 +181,7 @@ class Command(BaseCommand):
                                          f'Пользователь: {goal.user},\n'
                                          f'Дедлайн {goal.due_date if goal.due_date else "Нет"} \n') for goal in goals]
         else:
-            self.tg_client.send_message(msg.chat.id, "Список целей пуст.")
+            self.tg_client.send_message(msg.chat.id, 'Goals not found!')
 
     @staticmethod
     def handle_save_category(msg: Message, tg_user: TgUser):
@@ -184,4 +200,4 @@ class Command(BaseCommand):
 
             if 'goal_title' in user_states['state']:
                 del user_states['state']['goal_title']
-        self.tg_client.send_message(tg_user.chat_id, 'Операция отменена')
+        self.tg_client.send_message(tg_user.chat_id, 'Cancel')

@@ -17,8 +17,7 @@ class TestTgUser:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         tg_user.refresh_from_db()
-        # assert tg_user.user is None
-        # send_message_mock.assert_not_called()
+
 
     def test_valid_verification_code(self, auth_client, tg_user, user):
         payload = {'verification_code': tg_user.verification_code}
