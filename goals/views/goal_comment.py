@@ -29,4 +29,3 @@ class GoalCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return GoalComment.objects.select_related('user').filter(
             goal__category__board__participants__user=self.request.user
         )
-

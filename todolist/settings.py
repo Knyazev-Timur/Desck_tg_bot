@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-# from environ import Env
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -64,23 +63,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'todolist.urls'
 
 
-# TEMPLATES = [
-#     {
-#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-#         'DIRS': [BASE_DIR / 'templates']
-#         ,
-#         'APP_DIRS': True,
-#         'OPTIONS': {
-#             'context_processors': [
-#                 'django.template.context_processors.debug',
-#                 'django.template.context_processors.request',
-#                 'django.contrib.auth.context_processors.auth',
-#                 'django.contrib.messages.context_processors.messages',
-#                 'social_django.context_processors.backends',
-#             ],
-#         },
-#     },
-# ]
 
 TEMPLATES = [
     {
@@ -118,8 +100,6 @@ DATABASES = {
         'PORT': os.environ.get('SQL_DB_PORT'),
     }
 }
-
-
 
 # DATABASES = {
 #     'default': {
@@ -192,8 +172,6 @@ SOCIAL_AUTH_POSTGRES_ENABLED = True
 
 AUTH_USER_MODEL = 'core.User'
 
-# SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 SOCIAL_AUTH_VK_SCOPE = ['email']
 
@@ -218,16 +196,5 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/categories'
 SOCIAL_AUTH_LOGIN_ERROR_URL ='/login-error'
 SOCIAL_AUTH_USER_MODEL = 'core.User'
 
-
-# REST_FRAMEWORK = {
-#     # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-#     # 'DEFAULT_AUTHENTICATION_CLASSES': [
-#     #     'rest_framework.authentication.SessionAuthentication',
-#     # ],
-#     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     ]
-# }
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')

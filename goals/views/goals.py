@@ -1,4 +1,3 @@
-from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, filters
 
@@ -12,6 +11,7 @@ class GoalCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalSerializer
 
+
 class GoalListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalWithUserSerializer
@@ -23,7 +23,7 @@ class GoalListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Goal.objects.filter(
-            category__board__participants__user=self.request.user,).exclude(status=Goal.Status.archived)
+            category__board__participants__user=self.request.user, ).exclude(status=Goal.Status.archived)
 
 
 class GoaDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -34,4 +34,3 @@ class GoaDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance: Goal) -> None:
         instance.status = Goal.Status.archived
         instance.save(update_fields=['status'])
-

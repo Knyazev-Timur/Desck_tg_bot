@@ -15,7 +15,7 @@ class GoalCategoryListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCategorySerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    ordering_fields = ['title', 'created'] # поля сортировки
+    ordering_fields = ['title', 'created']  # поля сортировки
     ordering = ['title']
     search_fields = ['title']
 
