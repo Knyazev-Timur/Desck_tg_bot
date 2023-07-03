@@ -127,7 +127,9 @@ class Command(BaseCommand):
         boards = BoardParticipant.objects.filter(user=tg_user.user)
 
         if boards:
-            [self.tg_client.send_message(msg.chat.id, f"Ваши доски: {item.board.title}\n") for item in boards]
+            [self.tg_client.send_message(
+                msg.chat.id, f"Ваши доски: {item.board.title}\n"
+            ) for item in boards if item.board.is_deleted is not True]
         else:
             self.tg_client.send_message(msg.chat.id, "Доски отсутствуют.")
 
