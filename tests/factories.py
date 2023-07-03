@@ -80,6 +80,11 @@ class GoalCommentFactory(DatesFactoryMixin):
     class Meta:
         model = GoalComment
 
+class SignUpRequest(factory.DictFactory):
+    username = factory.Faker('user_name')
+    password = factory.Faker('password')
+    password_repeat = factory.LazyAttribute(lambda o: o.password)
+
 
 class CreateGoalCategoryRequest(factory.DictFactory):
     title =factory.Faker('catch_phrase')
