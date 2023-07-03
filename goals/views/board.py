@@ -4,7 +4,7 @@ from rest_framework import generics, filters, permissions
 
 from goals.models import BoardParticipant, Board, Goal
 from goals.permissions import BoardPermission
-from goals.serializers import BoardSerializer, BoardParticipantSerializer, BoardWithParticipantsSerializer
+from goals.serializers import BoardSerializer, BoardWithParticipantsSerializer
 
 
 class BoardCreateViews(generics.CreateAPIView):
@@ -27,18 +27,6 @@ class BoardListView(generics.ListAPIView):
         return Board.objects.filter(participants__user=self.request.user).exclude(is_deleted=True)
 
 
-# class BoardDetailView(generics.RetrieveUpdateAPIView):
-#     permission_classes = [BoardPermission]
-#     serializer_class = BoardWithParticipantsSerializer
-#     queryset = Board.objects.prefetch_related('participants__user').exclude(is_deleted=True)
-#
-#     def perform_destroy(self, instance: Board) -> None:
-#         with transaction.atomic():
-#             Board.objects.filter(id=instance.id).update(is_deleted=True)
-#             instance.categories.update(is_deleted=True)
-#             Goal.objects.filter(category__board=instance).update(status=Goal.Status.archived)
-
-
 class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [BoardPermission]
     serializer_class = BoardWithParticipantsSerializer
@@ -49,5 +37,3 @@ class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
             Board.objects.filter(id=instance.id).update(is_deleted=True)
             instance.categories.update(is_deleted=True)
             Goal.objects.filter(category__board=instance).update(status=Goal.Status.archived)
-
-

@@ -1,5 +1,8 @@
+from typing import Any
+
 from django.contrib.auth import login, logout, get_user_model
 from rest_framework import permissions, generics, status
+from rest_framework.request import Request
 from rest_framework.response import Response
 from core.serializers import RegistrationSerializer, LoginSerializer, UserSerializer, UpdatePasswordSerializer
 from core.models import User
@@ -36,7 +39,7 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
 # for MyPy def delete(self, request: Request, *args: Any, **kwargs: Any):
 # Queryset -> queryset
 #####
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request: Request, *args: Any, **kwargs: Any):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
